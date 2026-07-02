@@ -62,6 +62,8 @@
   --color-inverse-primary: #b1c5ff;
   --color-surface-tint: #2259bf;
 
+  --color-live-green: #22c55e;
+
   --font-headline: "Noto Serif", serif;
   --font-display: "Noto Serif", serif;
   --font-body: "Inter", sans-serif;
@@ -75,4 +77,13 @@
 
 body {
   @apply bg-background text-on-surface font-body antialiased;
+}
+
+@keyframes pulse-soft {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+.pulse-live {
+  animation: pulse-soft 2.5s infinite ease-in-out;
 }
