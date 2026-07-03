@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, type Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -10,8 +10,10 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-export const firebaseApp = initializeApp(firebaseConfig);
-export const auth = getAuth(firebaseApp);
-export const googleProvider = new GoogleAuthProvider();
-
 export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
+
+// getAuth() throws immediately if the config is incomplete, so only initialize
+// once real Firebase credentials are set — otherwise the whole module tree
+// (App -> Layout/Login/AuthContext) fails to import and the app renders blank.
+export const auth = (isFirebaseConfigured ? getAuth(initializeApp(firebaseConfig)) : null) as Auth;
+export const googleProvider = new GoogleAuthProvider();
