@@ -4,7 +4,10 @@ services:
     runtime: node
     plan: free
     rootDir: backend
-    buildCommand: npm install && npx playwright install --with-deps chromium && npm run build
+    # Note: no --with-deps here — that flag shells out to `sudo apt-get`, which
+    # fails on Render's build sandbox (no root access, "su: Authentication failure").
+    # Render's Node build image already ships the shared libs Chromium needs headless.
+    buildCommand: npm install && npx playwright install chromium && npm run build
     startCommand: npm run start
     envVars:
       - key: NODE_VERSION
