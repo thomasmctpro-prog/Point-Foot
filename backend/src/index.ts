@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import matchesRouter from "./routes/matches";
 import newsRouter from "./routes/news";
+import leaguesRouter from "./routes/leagues";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/matches", matchesRouter);
 app.use("/api/news", newsRouter);
+app.use("/api/leagues", leaguesRouter);
 
 app.listen(port, () => {
   console.log(`FootyPredict backend listening on http://localhost:${port}`);

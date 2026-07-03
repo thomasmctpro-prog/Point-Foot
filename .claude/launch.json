@@ -5,14 +5,14 @@
       "name": "frontend",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "cwd": "frontend",
+      "cwd": "FootyPredict/frontend",
       "port": 5173
     },
     {
       "name": "backend",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "cwd": "backend",
+      "cwd": "FootyPredict/backend",
       "port": 3001
     }
   ]

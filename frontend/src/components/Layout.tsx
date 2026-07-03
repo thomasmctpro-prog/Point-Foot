@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { useAuth } from "../lib/AuthContext";
 
 const navItems = [
   { to: "/", label: "Résultats", icon: "sensors" },
@@ -25,6 +26,8 @@ function sideNavLinkClass({ isActive }: { isActive: boolean }) {
 }
 
 export default function Layout() {
+  const { user, loading, signOut } = useAuth();
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-on-surface font-body">
       <header className="sticky top-0 z-50 flex items-center justify-between gap-4 px-4 sm:px-8 h-16 sm:h-20 bg-surface/80 backdrop-blur-md border-b border-surface-container-highest">
@@ -38,15 +41,29 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
-        <button
-          type="button"
-          disabled
-          title="Connexion disponible prochainement"
-          className="flex items-center gap-2 px-4 py-2 rounded-full border border-surface-container-highest text-on-surface-variant font-label text-sm font-semibold opacity-60 cursor-not-allowed"
-        >
-          <span className="material-symbols-outlined text-[20px]">account_circle</span>
-          <span className="hidden sm:inline">Connexion</span>
-        </button>
+        {!loading && user ? (
+          <div className="flex items-center gap-3">
+            <span className="hidden sm:inline font-label text-sm text-on-surface-variant truncate max-w-[140px]">
+              {user.displayName ?? user.email}
+            </span>
+            <button
+              type="button"
+              onClick={() => signOut()}
+              className="flex items-center gap-2 px-4 py-2 rounded-full border border-surface-container-highest text-on-surface-variant font-label text-sm font-semibold hover:text-on-surface hover:bg-surface-container transition-colors"
+            >
+              <span className="material-symbols-outlined text-[20px]">logout</span>
+              <span className="hidden sm:inline">Déconnexion</span>
+            </button>
+          </div>
+        ) : (
+          <NavLink
+            to="/connexion"
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-surface-container-highest text-on-surface-variant font-label text-sm font-semibold hover:text-on-surface hover:bg-surface-container transition-colors"
+          >
+            <span className="material-symbols-outlined text-[20px]">account_circle</span>
+            <span className="hidden sm:inline">Connexion</span>
+          </NavLink>
+        )}
       </header>
 
       <div className="flex flex-1 w-full max-w-[1400px] mx-auto">
