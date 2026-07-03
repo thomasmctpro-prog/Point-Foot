@@ -7,7 +7,10 @@ services:
     # Note: no --with-deps here — that flag shells out to `sudo apt-get`, which
     # fails on Render's build sandbox (no root access, "su: Authentication failure").
     # Render's Node build image already ships the shared libs Chromium needs headless.
-    buildCommand: npm install && npx playwright install chromium && npm run build
+    # chromium.launch({ headless: true }) resolves to the chrome-headless-shell binary
+    # in recent Playwright versions, which is a separate download from "chromium" —
+    # install both explicitly or the launch fails with "Executable doesn't exist".
+    buildCommand: npm install && npx playwright install chromium chromium-headless-shell && npm run build
     startCommand: npm run start
     envVars:
       - key: NODE_VERSION
