@@ -15,7 +15,14 @@ let browserPromise: Promise<Browser> | null = null;
 
 async function getBrowser(): Promise<Browser> {
   if (!browserPromise) {
-    browserPromise = chromium.launch({ headless: true }).catch((err) => {
+    browserPromise = chromium
+      .launch({
+        headless: true,
+        // Required on most container hosts (Render, Railway, Docker) where the
+        // process can't create a sandboxed namespace without extra privileges.
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      })
+      .catch((err) => {
       browserPromise = null;
       throw err;
     });

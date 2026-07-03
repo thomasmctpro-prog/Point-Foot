@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: point-foot-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npx playwright install --with-deps chromium && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 24.13.1
+      - key: PORT
+        value: 3001
+      - key: FLASHSCORE_BASE_URL
+        value: https://www.flashscore.fr
+      - key: MERCATO_SOURCE_URL
+        value: https://www.footmercato.net/
+      - key: SCRAPE_CACHE_TTL_MINUTES
+        value: 5
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false

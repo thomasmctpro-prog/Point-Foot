@@ -1,11 +1,16 @@
 export class ApiError extends Error {}
 
+// In dev, Vite's server.proxy forwards "/api" to localhost:3001, so this stays empty.
+// In prod, the frontend (Vercel) and backend (Render) are separate origins, so
+// VITE_API_BASE_URL must be set to the deployed backend's URL (e.g. https://xxx.onrender.com).
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+
 async function request<T>(path: string, options?: { method?: string; body?: unknown; token?: string }): Promise<T> {
   const headers: Record<string, string> = {};
   if (options?.body !== undefined) headers["Content-Type"] = "application/json";
   if (options?.token) headers["Authorization"] = `Bearer ${options.token}`;
 
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${API_BASE_URL}/api${path}`, {
     method: options?.method ?? "GET",
     headers,
     body: options?.body !== undefined ? JSON.stringify(options.body) : undefined,
