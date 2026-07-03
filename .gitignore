@@ -8,3 +8,4 @@ build/
 firebase-debug.log
 .firebase/
 coverage/
+*.tsbuildinfo
