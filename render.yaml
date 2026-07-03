@@ -15,6 +15,15 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 24.13.1
+      # Render's native (non-Docker) build uploads only the rootDir artifact
+      # (app code + node_modules) from the build machine to the runtime instance.
+      # Playwright's default browser cache lives in $HOME/.cache/ms-playwright,
+      # OUTSIDE that artifact, so browsers installed during build silently vanish
+      # at runtime ("Executable doesn't exist" even though the build log shows the
+      # download succeeding). PLAYWRIGHT_BROWSERS_PATH=0 stores browsers inside
+      # node_modules/.local-browsers instead, which IS part of the shipped artifact.
+      - key: PLAYWRIGHT_BROWSERS_PATH
+        value: "0"
       - key: PORT
         value: 3001
       - key: FLASHSCORE_BASE_URL
