@@ -89,7 +89,14 @@ export async function scrapeFlashscoreMatches(): Promise<Match[]> {
 
   try {
     await page.goto(FLASHSCORE_URL, { waitUntil: "domcontentloaded", timeout: 30000 });
-    await page.waitForSelector(".event__match", { timeout: 20000, state: "attached" });
+    // flashscore.fr live-updates its match list, constantly detaching/reattaching
+    // .event__match nodes. waitForSelector holds a resolved element handle and keeps
+    // losing it to that churn (times out even though matches are present). A predicate
+    // polled in-page never holds a handle across the boundary, so it's immune.
+    await page.waitForFunction(
+      () => document.querySelectorAll(".event__match").length > 0,
+      { timeout: 20000 }
+    );
 
     const raw: RawMatch[] = await page.evaluate(() => {
       const container = document.getElementById("live-table");
